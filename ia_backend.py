@@ -807,20 +807,25 @@ class IAAprendizadoContinuo:
             if resp.status_code != 200:
                 return None
             soup = BeautifulSoup(resp.text, 'lxml')
-            # tabela principal de finais
-            table = soup.find('table', {'class': 'wikitable'})
+            # encontar a tabela correta: sortable wikitable com plainrowheaders
+            table = None
+            for tbl in soup.find_all('table'):
+                classes = tbl.get('class') or []
+                if 'wikitable' in classes and 'sortable' in classes and 'plainrowheaders' in classes:
+                    table = tbl
+                    break
             if not table:
                 return None
             for row in table.find_all('tr'):
                 cols = row.find_all(['th','td'])
-                if len(cols) >= 5:
-                    # a primeira coluna geralmente é o ano
+                if cols:
                     ano_text = cols[0].get_text(strip=True)
                     if ano in ano_text:
-                        # campeão está na segunda coluna ou terceira dependendo da estrutura
-                        # Observamos a coluna de vencedor possivelmente 1 ou 2
-                        campeao = cols[1].get_text(strip=True)
-                        return campeao
+                        # Ideally champion in second cell
+                        if len(cols) >= 2:
+                            campeao = cols[1].get_text(strip=True)
+                            return campeao
+                        break
             return None
         except Exception:
             return None
