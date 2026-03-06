@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 IA Aprendizado Contínuo - Interface Web</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>IA Aprendizado Contínuo</span>
+            </div>
+            <div class="status-indicator">
+                <span class="status-dot" id="connectionStatus"></span>
+                <span id="connectionText">Desconectado</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard -->
+            <div class="dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statTotalTrainings">0</h3>
+                            <p>Total de Treinamentos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statAccuracy">0%</h3>
+                            <p>Acurácia Atual</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-predictions"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statPredictions">0</h3>
+                            <p>Total de Previsões</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statThreatsBlocked">0</h3>
+                            <p>Ameaças Bloqueadas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="train">
+                    <i class="fas fa-database"></i> Treinar
+                </button>
+                <button class="tab-btn" data-tab="predict">
+                    <i class="fas fa-robot"></i> Prever
+                </button>
+                <button class="tab-btn" data-tab="learn">
+                    <i class="fas fa-sync-alt"></i> Aprender
+                </button>
+                <button class="tab-btn" data-tab="history">
+                    <i class="fas fa-history"></i> Histórico
+                </button>
+                <button class="tab-btn" data-tab="chat">
+                    <i class="fas fa-comments"></i> Chat
+                </button>
+                <button class="tab-btn" data-tab="settings">
+                    <i class="fas fa-cog"></i> Configurações
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Tab: Treinar -->
+                <div class="tab-pane active" id="train">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-database"></i> Treinamento Inicial</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-table"></i> Dados de Treinamento (X)
+                                </label>
+                                <textarea id="trainX" placeholder="Ex: [[1,2],[2,3],[3,4],[4,5]]" rows="4"></textarea>
+                                <small>Formato: Lista de listas de números</small>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-tags"></i> Labels (y)
+                                </label>
+                                <textarea id="trainY" placeholder="Ex: [0,0,1,1]" rows="2"></textarea>
+                                <small>Formato: Lista de inteiros (0 ou 1)</small>
+                            </div>
+                            <button class="btn btn-primary" onclick="treinar()">
+                                <i class="fas fa-play"></i> Iniciar Treinamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Prever -->
+                <div class="tab-pane" id="predict">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-robot"></i> Fazer Previsão</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-table"></i> Dados para Previsão (X)
+                                </label>
+                                <textarea id="predictX" placeholder="Ex: [[2.5,3.5]]" rows="4"></textarea>
+                            </div>
+                            <button class="btn btn-success" onclick="prever()">
+                                <i class="fas fa-magic"></i> Fazer Previsão
+                            </button>
+                            <div class="result-box" id="predictResult" style="display:none;">
+                                <h3>Resultado:</h3>
+                                <pre id="predictOutput"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Aprender -->
+                <div class="tab-pane" id="learn">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-sync-alt"></i> Aprendizado Contínuo</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                Adicione novos dados para a IA continuar aprendendo!
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-table"></i> Novos Dados (X)
+                                </label>
+                                <textarea id="learnX" placeholder="Ex: [[6,7],[7,8]]" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-tags"></i> Novos Labels (y)
+                                </label>
+                                <textarea id="learnY" placeholder="Ex: [1,1]" rows="2"></textarea>
+                            </div>
+                            <button class="btn btn-warning" onclick="aprender()">
+                                <i class="fas fa-sync"></i> Continuar Aprendizado
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Histórico -->
+                <div class="tab-pane" id="history">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-history"></i> Histórico de Treinamentos</h2>
+                            <button class="btn btn-sm btn-secondary" onclick="carregarHistorico()">
+                                <i class="fas fa-refresh"></i> Atualizar
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Tipo</th>
+                                            <th>Amostras</th>
+                                            <th>Acurácia</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyTable">
+                                        <tr>
+                                            <td colspan="5" class="text-center">Nenhum histórico disponível</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Chat -->
+                <div class="tab-pane" id="chat">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-comments"></i> Chatbot IA</h2>
+                            <button class="btn btn-sm btn-secondary" onclick="limparChat()">
+                                <i class="fas fa-trash"></i> Limpar
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="chat-container">
+                                <div class="chat-messages" id="chatMessages">
+                                    <div class="message ai-message">
+                                        <div class="message-avatar">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                        <div class="message-content">
+                                            <p>Olá! Sou uma IA de aprendizado contínuo. Como posso ajudar você hoje?</p>
+                                            <small class="message-time">Agora</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-input-container">
+                                    <div class="chat-input-group">
+                                        <input type="text" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+                                        <button class="btn btn-primary" onclick="enviarMensagem()">
+                                            <i class="fas fa-paper-plane"></i> Enviar
+                                        </button>
+                                    </div>
+                                    <div class="chat-options">
+                                        <button class="btn btn-sm btn-outline" onclick="modoTreinamento()">
+                                            <i class="fas fa-graduation-cap"></i> Modo Treinamento
+                                        </button>
+                                        <button class="btn btn-sm btn-outline" onclick="modoConversacao()">
+                                            <i class="fas fa-comments"></i> Modo Conversação
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Configurações -->
+                <div class="tab-pane" id="settings">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-cog"></i> Configurações</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-server"></i> URL do Servidor
+                                </label>
+                                <input type="text" id="serverUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-save"></i> Salvar Modelo
+                                </label>
+                                <button class="btn btn-primary" onclick="salvarModelo()">
+                                    <i class="fas fa-save"></i> Salvar
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-upload"></i> Carregar Modelo
+                                </label>
+                                <button class="btn btn-primary" onclick="carregarModelo()">
+                                    <i class="fas fa-upload"></i> Carregar
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-redo"></i> Reiniciar IA
+                                </label>
+                                <button class="btn btn-danger" onclick="reiniciarIA()">
+                                    <i class="fas fa-redo"></i> Reiniciar
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-shield-alt"></i> Status de Segurança
+                                </label>
+                                <div class="security-status">
+                                    <span class="badge badge-success">Protocolo de Preservação Humana: ATIVO</span>
+                                    <span class="badge badge-success">Sandbox de Arquivos: ATIVO</span>
+                                    <span class="badge badge-success">Navegação Web Segura: ATIVO</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>🛡️ Código de Honra da IA - Proteção Incondicional à Vida Humana</p>
+            <p class="copyright">© 2024 IA Aprendizado Contínuo - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+/ia-segura-completa/
+├── 📄 requirements.txt
+├── 📄 README.md
+├── 📄 .gitignore
+├── 📄 secure_data/
+│   └── .gitkeep
+├── 🐍 backend/
+│   └── ia_aprendizado_continuo_seguro.py
+└── 🌐 frontend/
+    ├── index.html
+    ├── style.css
+    └── script.js
